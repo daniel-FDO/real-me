@@ -555,13 +555,178 @@
     };
   }
 
+  /* ---------- SELECTED PROJECTS (2 x 2) ----------
+     Website cards show a sharp still poster. On hover or keyboard focus (or the Preview
+     button on touch screens) a short motion sequence plays inside the card, built from real
+     crops of that website (images/projects/motion). Everything in the sequence runs on one
+     7.2s CSS timeline (see "MOTION PREVIEWS" in site.css); JS only adds or removes
+     .is-playing, so leaving the card stops it and restores the poster straight away. */
+  var MO = "images/projects/motion/";
+  function crop(file, cls, alt) {
+    return '<img class="' + cls + '" src="' + MO + file + '" alt="' + (alt || "") + '" loading="lazy" decoding="async" draggable="false">';
+  }
+  // a scene "window" (when it is visible) wrapping pieces that enter in different ways
+  function sc(win, inner) {
+    return '<div class="sq-win ' + win + '">' + inner + "</div>";
+  }
+  function piece(motion, delay, html, extra) {
+    return '<div class="sq-p ' + motion + (extra ? " " + extra : "") + '" style="--d:' + delay + 's">' + html + "</div>";
+  }
+  var SEQ = {
+    // Porchlight: intro title -> mood picker + crisis bar -> three help cards + stats -> closing frame
+    porchlight: function (p) {
+      return (
+        sc("w-intro", '<div class="sq-bg bg-porch"></div>' +
+          piece("m-line", 0.25, '<span class="sq-kicker">Support hub · Kent</span>') +
+          piece("m-line", 0.4, '<span class="sq-title">Porchlight</span>') +
+          piece("m-line", 0.55, '<span class="sq-title">Support Hub</span>')) +
+        sc("w-one", '<div class="sq-bg bg-porch-2"></div>' +
+          piece("m-drop", 1.55, crop("porchlight-bar.jpg", "sq-img"), "at-bar") +
+          piece("m-wipe", 1.75, crop("porchlight-mood.jpg", "sq-img"), "at-mood") +
+          piece("m-left", 2.05, '<span class="sq-eyebrow">01 · Mood picker</span><span class="sq-cap">Four feelings, four routes to help</span>', "at-cap")) +
+        sc("w-two", '<div class="sq-bg bg-porch"></div>' +
+          piece("m-rise", 3.8, crop("porchlight-card1.jpg", "sq-img"), "at-c1") +
+          piece("m-rise", 3.95, crop("porchlight-card2.jpg", "sq-img"), "at-c2") +
+          piece("m-rise", 4.1, crop("porchlight-card3.jpg", "sq-img"), "at-c3") +
+          piece("m-wipe", 4.45, crop("porchlight-stats.jpg", "sq-img"), "at-stats") +
+          piece("m-left", 4.35, '<span class="sq-eyebrow">02 · Help, three ways</span><span class="sq-cap">Shelter &amp; food · support · someone to talk to</span>', "at-cap cap-top")) +
+        sc("w-end", '<div class="sq-bg bg-porch"></div>' +
+          piece("m-zoom", 5.95, '<div class="sq-frame"><i></i><i></i><i></i></div>' + crop("../porchlight-desktop.jpg", "sq-img"), "at-final") +
+          piece("m-line", 6.15, '<span class="sq-title sm">Porchlight Support Hub</span>', "at-end-t") +
+          piece("m-line", 6.3, '<span class="sq-url">porchlightwebproj.netlify.app</span>', "at-end-u"))
+      );
+    },
+    // BluePrint: intro title -> hero + CV mock-up -> CV Builder / coming soon + how it works -> closing frame
+    blueprint: function (p) {
+      return (
+        sc("w-intro", '<div class="sq-bg bg-blue"></div>' +
+          piece("m-line", 0.25, '<span class="sq-kicker">Career tools</span>') +
+          piece("m-line", 0.4, '<span class="sq-title">BluePrint</span>') +
+          piece("m-line", 0.55, '<span class="sq-title it">Build your future.</span>')) +
+        sc("w-one", '<div class="sq-bg bg-blue-2"></div>' +
+          piece("m-wipe", 1.6, crop("blueprint-title.jpg", "sq-img"), "at-bp-title") +
+          piece("m-right", 1.8, crop("blueprint-cv.jpg", "sq-img"), "at-bp-cv") +
+          piece("m-left", 2.1, '<span class="sq-eyebrow">01 · CV Builder</span><span class="sq-cap">A professional CV built around you</span>', "at-cap")) +
+        sc("w-two", '<div class="sq-bg bg-blue"></div>' +
+          piece("m-rise", 3.8, crop("blueprint-tool1.jpg", "sq-img"), "at-t1") +
+          piece("m-rise", 4.0, crop("blueprint-tool2.jpg", "sq-img"), "at-t2") +
+          piece("m-wipe", 4.35, crop("blueprint-steps.jpg", "sq-img"), "at-steps") +
+          piece("m-left", 4.2, '<span class="sq-eyebrow">02 · How it works</span><span class="sq-cap">From information to opportunity</span>', "at-cap cap-top")) +
+        sc("w-end", '<div class="sq-bg bg-blue"></div>' +
+          piece("m-zoom", 5.95, '<div class="sq-frame"><i></i><i></i><i></i></div>' + crop("../blueprint-desktop.jpg", "sq-img"), "at-final") +
+          piece("m-line", 6.15, '<span class="sq-title sm">BluePrint</span>', "at-end-t") +
+          piece("m-line", 6.3, '<span class="sq-url">blueprint-vwig.onrender.com</span>', "at-end-u"))
+      );
+    },
+  };
+  var ARROW = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 11L11 5M6 5h5v5"/></svg>';
+  function workCard(f, i) {
+    if (f.motion) {
+      var hasVideo = !!f.video;
+      return (
+        '<article class="wk wk-motion' + (hasVideo ? " has-video" : "") + '">' +
+        '<div class="wk-media">' +
+        (hasVideo
+          ? '<video class="wk-video" muted loop playsinline preload="none"' + (f.poster ? ' poster="' + esc(f.poster) + '"' : "") + ' src="' + esc(f.video) + '"></video>'
+          : '<div class="wk-cover cover-' + esc(f.cover) + '" aria-hidden="true">' + (f.cover === "m1" ? '<span class="c-num">01</span><i></i><i></i><i></i><i></i>' : '<span class="c-row">motion</span><span class="c-row o">motion</span><span class="c-row">motion</span><span class="c-row o">motion</span>') + "</div>") +
+        '<div class="wk-shade"></div>' +
+        (hasVideo ? "" : '<span class="wk-soon">Coming soon</span>') +
+        '<h3 class="wk-title">' + esc(f.title) + ' <span>| ' + esc(f.label) + "</span></h3>" +
+        "</div></article>"
+      );
+    }
+    var p = P.filter(function (x) {
+      return x.slug === f.slug;
+    })[0];
+    if (!p) return "";
+    return (
+      '<article class="wk wk-site" data-seq="' + esc(p.slug) + '">' +
+      '<div class="wk-media">' +
+      '<img class="wk-poster" src="' + esc(p.shots.desktop) + '" alt="' + esc(p.title) + ' home page" width="1440" height="900" loading="lazy" decoding="async">' +
+      '<div class="wk-seq" aria-hidden="true">' + SEQ[p.slug](p) + "</div>" +
+      '<div class="wk-shade"></div>' +
+      '<h3 class="wk-title">' + esc(p.title) + ' <span>| ' + esc(f.label) + "</span></h3>" +
+      "</div>" +
+      '<div class="wk-bar">' +
+      '<button class="wk-play" type="button" aria-pressed="false">Preview</button>' +
+      '<a class="wk-link" href="project.html?p=' + encodeURIComponent(p.slug) + '">Details</a>' +
+      '<a class="wk-link wk-live" href="' + esc(p.url) + '" target="_blank" rel="noopener">View website ' + ARROW + '<span class="sr-only"> (opens in a new tab)</span></a>' +
+      "</div></article>"
+    );
+  }
+  function workGrid(box) {
+    if (!box) return null;
+    var F = window.FEATURED || [];
+    box.innerHTML = F.map(workCard).join("");
+    var RM = Site.reducedMotion(),
+      touch = matchMedia("(hover: none)").matches,
+      cards = [].slice.call(box.querySelectorAll(".wk-site, .wk-motion.has-video"));
+    function play(card, on) {
+      if (RM && on) return; // reduced motion: the still poster stays
+      card.classList.toggle("is-playing", on);
+      var btn = card.querySelector(".wk-play"),
+        v = card.querySelector("video");
+      if (btn) btn.setAttribute("aria-pressed", on);
+      if (v) {
+        if (on) v.play().catch(function () {});
+        else {
+          v.pause();
+          v.currentTime = 0;
+        }
+      }
+    }
+    cards.forEach(function (card) {
+      // mouse: hover plays; keyboard: focusing the card's links plays; leaving stops
+      card.addEventListener("pointerenter", function (e) {
+        if (e.pointerType === "mouse") play(card, true);
+      });
+      card.addEventListener("pointerleave", function (e) {
+        if (e.pointerType === "mouse") play(card, false);
+      });
+      card.addEventListener("focusin", function (e) {
+        if (!e.target.classList.contains("wk-play")) play(card, true);
+      });
+      card.addEventListener("focusout", function (e) {
+        if (!card.contains(e.relatedTarget)) play(card, false);
+      });
+      // touch screens: an explicit Preview button
+      var btn = card.querySelector(".wk-play");
+      if (btn) {
+        btn.hidden = RM || !touch;
+        btn.addEventListener("click", function () {
+          play(card, !card.classList.contains("is-playing"));
+        });
+      }
+    });
+    // nothing plays off-screen or in a hidden tab
+    var io =
+      "IntersectionObserver" in window
+        ? new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+              if (!e.isIntersecting) play(e.target, false);
+            });
+          })
+        : null;
+    cards.forEach(function (c) {
+      if (io) io.observe(c);
+    });
+    function onHide() {
+      if (document.hidden) cards.forEach(function (c) {
+        play(c, false);
+      });
+    }
+    document.addEventListener("visibilitychange", onHide);
+    return function () {
+      if (io) io.disconnect();
+      document.removeEventListener("visibilitychange", onHide);
+    };
+  }
+
   /* ---------- home: headline, clock, showcase, workspace and the recent work grid ---------- */
   Site.define("home", function (main) {
-    var box = main.querySelector("[data-featured]");
-    if (box) box.innerHTML = P.map(function (p) {
-      return card(p, 3);
-    }).join("");
     var stops = [
+      workGrid(main.querySelector("[data-featured]")),
+      window.Characters ? Characters.mount(main) : null,
       headline(main),
       workspace(main),
       decos(main),

@@ -34,6 +34,47 @@
   --glass-blur: blur(28px) saturate(1.9);
   --ws-ink: rgba(22, 22, 29, 0.46); /* lines of the little workspace objects behind the hero */
   --ws-fill: rgba(255, 255, 255, 0.6);
+  /* surfaces that change character between themes (each theme sets its own; no separate overrides) */
+  --frame: #ffffff; /* browser frames around screenshots */
+  --frame-bar: #f3f3f6;
+  --frame-url: #ffffff;
+  --frame-url-ink: #5d5d68;
+  --frame-line: rgba(22, 22, 29, 0.07);
+  --frame-shadow: 0 0 0 1px rgba(22, 22, 29, 0.08), 0 18px 40px -20px rgba(22, 22, 29, 0.35);
+  --frame-shadow-front: 0 0 0 1px rgba(22, 22, 29, 0.08), 0 40px 80px -24px rgba(22, 22, 29, 0.45), 0 10px 24px rgba(22, 22, 29, 0.1);
+  --card-edge: var(--line);
+  --cta-bg: var(--blue); /* the "Got an idea?" band */
+  --cta-ink: var(--on-blue);
+  --cta-edge: transparent;
+  --cta-btn-bg: var(--on-blue);
+  --cta-btn-ink: var(--blue);
+  --cta-wire: var(--on-blue);
+  --tag-blue: #2f4bff; /* the blue floating tag */
+  --tag-blue-ink: #ffffff;
+  --chip-body: #262833; /* the microchip illustration */
+  /* the portrait watermark. The source is a silhouette whose transparency encodes how dark each part
+     of the photo is, so it must always be filled with a DARK colour to read as a normal (positive) image.
+     Light mode: faint ink. Dark mode: a soft pool of light behind it (--wm-glow / the welcome spotlight)
+     with the dark silhouette on top, instead of a light fill, which would turn it into a photo negative. */
+  --wm-fill: var(--ink); /* home page */
+  --wm-blend: multiply;
+  --wm-opacity: 0.06;
+  --wm-glow: transparent;
+  --wmw-fill: var(--ink); /* welcome page */
+  --wmw-base: 0.08;
+  --wmw-base-z: 0;
+  --wmw-lit: 0.5; /* the blue light that follows the pointer */
+  --wmw-lit-bg: var(--blue);
+  --wmw-lit-mask: var(--wm); /* light mode: the light is shaped like the portrait */
+  --bar-bg: rgba(255, 255, 255, 0.3); /* the welcome page's frosted control bar and badge */
+  --bar-blur: blur(16px) saturate(1.35);
+  --bar-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 0 0 0.5px rgba(22, 22, 29, 0.08), 0 8px 28px rgba(22, 22, 29, 0.08), 0 1px 3px rgba(22, 22, 29, 0.05);
+  --bar-hover: rgba(255, 255, 255, 0.55);
+  --bar-press: rgba(22, 22, 29, 0.07);
+  --bar-solid: rgba(255, 255, 255, 0.93);
+  --err: #d92d4a;
+  --sb: rgba(94, 108, 140, 0.36); /* scrollbar thumb: subtle blue-grey */
+  --sb-hover: rgba(94, 108, 140, 0.62);
   --ui: -apple-system, BlinkMacSystemFont, "SF Pro Text", "DM Sans", system-ui,
     sans-serif;
   --serif: "Instrument Serif", Georgia, serif;
@@ -42,33 +83,73 @@
   --bar: 70px; /* height of the top bar area */
   color-scheme: light;
 }
-/* dark: Apple-style layered glass. Deep charcoal, slightly lighter raised surfaces,
-   soft off-white text and periwinkle accents, lit by faint blue and violet. */
+/* dark: a calm, deliberate dark theme (after the YOIN reference). Neutral charcoal instead of blue-black,
+   raised surfaces only a step lighter, warm off-white text (never pure white), warm grey for secondary text,
+   hairline edges instead of grey outlines, soft depth instead of glows, and a softened version of the blue accent. */
 :root[data-theme="dark"] {
-  --bg: #15161c;
-  --surface: #20222c;
-  --ink: #f1f2f7; /* 15.6:1 on --bg */
-  --muted: #b0b4c4; /* 9.1:1 on --bg */
-  --line: rgba(255, 255, 255, 0.08);
-  --blue: #8b95ff; /* 6.9:1 on --bg */
-  --on-blue: #15161c;
-  --glass-a: rgba(48, 51, 68, 0.58);
-  --glass-b: rgba(33, 35, 47, 0.44);
-  --glass-c: rgba(42, 45, 60, 0.52);
-  --glass-edge: rgba(255, 255, 255, 0.07);
-  --glass-hi: rgba(255, 255, 255, 0.11);
-  --glass-glow: rgba(139, 149, 255, 0.14);
-  --glass-solid: rgba(33, 35, 45, 0.97);
-  --shadow: 0 10px 30px rgba(0, 0, 0, 0.32), 0 1px 2px rgba(0, 0, 0, 0.28);
-  --tint: rgba(139, 149, 255, 0.18);
-  --hover: rgba(255, 255, 255, 0.06);
+  --bg: #121212;
+  --surface: #1a1a1a;
+  --ink: #eae8e6; /* 15.8:1 on --bg */
+  --muted: #aeaba6; /* 8.4:1 on --bg */
+  --line: rgba(234, 232, 230, 0.1);
+  --blue: #9aa2f0; /* 7.6:1 on --bg */
+  --on-blue: #121212;
+  --yellow: #e6c35c; /* the palette, a touch less neon on dark */
+  --pink: #e993bb;
+  --mint: #86dcbc;
+  --glass-a: rgba(40, 40, 40, 0.55);
+  --glass-b: rgba(26, 26, 26, 0.42);
+  --glass-c: rgba(33, 33, 33, 0.5);
+  --glass-edge: rgba(234, 232, 230, 0.08);
+  --glass-hi: rgba(255, 255, 255, 0.07);
+  --glass-glow: rgba(234, 232, 230, 0.06);
+  --glass-solid: rgba(28, 28, 28, 0.97);
+  --glass-blur: blur(16px) saturate(1.15);
+  --shadow: 0 10px 28px rgba(0, 0, 0, 0.28), 0 1px 2px rgba(0, 0, 0, 0.2);
+  --tint: rgba(154, 162, 240, 0.14);
+  --hover: rgba(234, 232, 230, 0.06);
   --wash: 0.16;
-  --amb1: rgba(98, 112, 255, 0.16);
-  --amb2: rgba(139, 92, 246, 0.12);
-  --amb3: rgba(76, 92, 214, 0.12);
-  --glass-blur: blur(20px) saturate(1.4);
-  --ws-ink: rgba(214, 218, 240, 0.42);
-  --ws-fill: rgba(32, 34, 44, 0.6);
+  --amb1: rgba(154, 162, 240, 0.045); /* barely-there light, no muddy glows */
+  --amb2: rgba(234, 232, 230, 0.02);
+  --amb3: rgba(154, 162, 240, 0.03);
+  --ws-ink: rgba(234, 232, 230, 0.36);
+  --ws-fill: rgba(26, 26, 26, 0.6);
+  --frame: #1c1c1c;
+  --frame-bar: #232323;
+  --frame-url: #2b2b2b;
+  --frame-url-ink: #aeaba6;
+  --frame-line: rgba(234, 232, 230, 0.06);
+  --frame-shadow: 0 0 0 1px rgba(234, 232, 230, 0.07), 0 18px 40px -22px rgba(0, 0, 0, 0.6);
+  --frame-shadow-front: 0 0 0 1px rgba(234, 232, 230, 0.08), 0 36px 70px -26px rgba(0, 0, 0, 0.7);
+  --card-edge: rgba(234, 232, 230, 0.08);
+  --cta-bg: #1a1a1a;
+  --cta-ink: var(--ink);
+  --cta-edge: rgba(234, 232, 230, 0.1);
+  --cta-btn-bg: var(--blue);
+  --cta-btn-ink: var(--on-blue);
+  --cta-wire: rgba(234, 232, 230, 0.5);
+  --tag-blue: #5561d6;
+  --tag-blue-ink: #f3f2f0;
+  --chip-body: #3a3a3a;
+  --wm-fill: #000000;
+  --wm-blend: normal;
+  --wm-opacity: 0.55;
+  --wm-glow: rgba(234, 232, 230, 0.08);
+  --wmw-fill: #000000;
+  --wmw-base: 0.5;
+  --wmw-base-z: 2; /* dark silhouette sits over the light */
+  --wmw-lit: 1;
+  --wmw-lit-bg: rgba(234, 232, 230, 0.1); /* a soft light pool that follows the pointer */
+  --wmw-lit-mask: linear-gradient(#000, #000); /* dark mode: a plain round pool, not portrait-shaped */
+  --bar-bg: rgba(30, 30, 30, 0.5);
+  --bar-blur: blur(16px) saturate(1.15);
+  --bar-shadow: inset 0 0 0 1px rgba(234, 232, 230, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 10px 28px rgba(0, 0, 0, 0.28), 0 1px 2px rgba(0, 0, 0, 0.2);
+  --bar-hover: rgba(234, 232, 230, 0.07);
+  --bar-press: rgba(234, 232, 230, 0.12);
+  --bar-solid: rgba(28, 28, 28, 0.96);
+  --err: #f09aaa;
+  --sb: rgba(174, 171, 166, 0.26); /* scrollbar thumb: muted warm grey from the palette */
+  --sb-hover: rgba(174, 171, 166, 0.46);
   color-scheme: dark;
 }
 
@@ -611,7 +692,7 @@ button.chip[aria-pressed="true"] {
   text-decoration: none;
   background: var(--surface);
   box-shadow:
-    0 0 0 0.75px var(--line),
+    0 0 0 1px var(--card-edge),
     var(--shadow);
   transition:
     transform 0.35s var(--ease-out),
@@ -731,8 +812,9 @@ button.chip[aria-pressed="true"] {
 .cta {
   border-radius: 36px;
   padding: clamp(32px, 6vw, 72px);
-  background: var(--blue);
-  color: var(--on-blue);
+  background: var(--cta-bg);
+  color: var(--cta-ink);
+  box-shadow: inset 0 0 0 1px var(--cta-edge);
   display: grid;
   gap: 8px;
 }
@@ -744,8 +826,8 @@ button.chip[aria-pressed="true"] {
   max-width: 46ch;
 }
 .cta .btn {
-  background: var(--on-blue);
-  color: var(--blue);
+  background: var(--cta-btn-bg);
+  color: var(--cta-btn-ink);
   justify-self: start;
   margin-top: 18px;
 }
@@ -913,19 +995,13 @@ button.chip[aria-pressed="true"] {
   box-shadow: inset 0 0 0 2.5px var(--blue);
 }
 .field [aria-invalid="true"] {
-  box-shadow: inset 0 0 0 2px #d92d4a;
+  box-shadow: inset 0 0 0 2px var(--err);
 }
 .err {
-  color: #d92d4a;
+  color: var(--err);
   font-size: 14px;
   font-weight: 600;
   min-height: 0;
-}
-:root[data-theme="dark"] .err {
-  color: #ff8fa3;
-}
-:root[data-theme="dark"] .field [aria-invalid="true"] {
-  box-shadow: inset 0 0 0 2px #ff8fa3;
 }
 .hp {
   position: absolute;
@@ -1225,7 +1301,8 @@ html {
   z-index: 1;
 }
 /* your portrait, huge and faint, fading out at the edges */
-.hero-wm {
+.hero-wm,
+.hero-glow {
   position: absolute;
   z-index: 0;
   left: 16%;
@@ -1233,9 +1310,15 @@ html {
   width: min(780px, 66%);
   aspect-ratio: 620 / 593;
   pointer-events: none;
-  background: var(--ink);
-  opacity: 0.06;
-  mix-blend-mode: multiply;
+}
+/* dark mode's soft light behind the portrait (transparent in light mode); round, so no edges */
+.hero-glow {
+  background: radial-gradient(closest-side, var(--wm-glow), transparent 100%);
+}
+.hero-wm {
+  background: var(--wm-fill);
+  opacity: var(--wm-opacity);
+  mix-blend-mode: var(--wm-blend);
   -webkit-mask-image: var(--wm), radial-gradient(closest-side, #000 40%, transparent 100%);
   mask-image: var(--wm), radial-gradient(closest-side, #000 40%, transparent 100%);
   -webkit-mask-size: contain, 100% 100%;
@@ -1246,12 +1329,6 @@ html {
   mask-position: center;
   -webkit-mask-composite: source-in;
   mask-composite: intersect;
-}
-/* dark: a cool, light tint blended with "screen", so the portrait glows faintly instead of sitting there as a patch */
-:root[data-theme="dark"] .hero-wm {
-  background: linear-gradient(180deg, #aab2ff, #7e86c8);
-  mix-blend-mode: screen;
-  opacity: 0.06;
 }
 .clock {
   display: inline-flex;
@@ -1394,10 +1471,7 @@ html {
   aspect-ratio: 1440 / 900; /* the screenshots' real proportions */
 }
 .slide.front .browser {
-  box-shadow:
-    0 0 0 1px rgba(22, 22, 29, 0.08),
-    0 40px 80px -24px rgba(22, 22, 29, 0.45),
-    0 10px 24px rgba(22, 22, 29, 0.1);
+  box-shadow: var(--frame-shadow-front);
 }
 .visit {
   position: absolute;
@@ -1407,7 +1481,7 @@ html {
   padding: 9px 15px;
   border-radius: 999px;
   background: rgba(22, 22, 29, 0.82);
-  color: #fff;
+  color: #f3f2f0;
   font: 600 13.5px/1 var(--ui);
   opacity: 0;
   transform: translateY(6px);
@@ -1469,8 +1543,8 @@ html {
   --r: -4deg;
   left: 1%;
   bottom: 5%;
-  background: #2f4bff;
-  color: #fff;
+  background: var(--tag-blue);
+  color: var(--tag-blue-ink);
   animation-delay: -2.4s;
 }
 .tag.t4 {
@@ -1548,10 +1622,8 @@ html {
   margin: 0;
   border-radius: 16px;
   overflow: hidden;
-  background: #fff;
-  box-shadow:
-    0 0 0 1px rgba(22, 22, 29, 0.08),
-    0 18px 40px -20px rgba(22, 22, 29, 0.35);
+  background: var(--frame);
+  box-shadow: var(--frame-shadow);
 }
 .browser .bar {
   flex: none;
@@ -1560,8 +1632,8 @@ html {
   gap: 6px;
   height: 30px;
   padding: 0 12px;
-  background: #f3f3f6;
-  border-bottom: 1px solid rgba(22, 22, 29, 0.07);
+  background: var(--frame-bar);
+  border-bottom: 1px solid var(--frame-line);
 }
 .browser .bar i {
   width: 9px;
@@ -1581,8 +1653,8 @@ html {
   margin-left: 10px;
   padding: 3px 10px;
   border-radius: 6px;
-  background: #fff;
-  color: #5d5d68;
+  background: var(--frame-url);
+  color: var(--frame-url-ink);
   font: 500 11px/1.3 var(--ui);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1603,33 +1675,6 @@ html {
   color: var(--muted);
   background: var(--surface);
 }
-/* dark: the frame goes dark glass, the screenshot inside keeps its real colours */
-:root[data-theme="dark"] .browser {
-  background: #20222c;
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.07),
-    0 18px 40px -20px rgba(0, 0, 0, 0.6);
-}
-:root[data-theme="dark"] .slide.front .browser {
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.08),
-    0 40px 80px -24px rgba(0, 0, 0, 0.7),
-    0 0 60px -10px rgba(139, 149, 255, 0.18);
-}
-:root[data-theme="dark"] .browser .bar {
-  background: #262833;
-  border-color: rgba(255, 255, 255, 0.06);
-}
-:root[data-theme="dark"] .browser .bar span {
-  background: #30323f;
-  color: #b0b4c4;
-}
-:root[data-theme="dark"] .card {
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.06),
-    var(--shadow);
-}
-
 /* the recent work section and cards with screenshots */
 .recent {
   padding-top: 28px;
@@ -1702,7 +1747,8 @@ html {
     width: min(720px, 100%);
     margin: 0 auto;
   }
-  .hero-wm {
+  .hero-wm,
+  .hero-glow {
     left: 10%;
     top: -4%;
     width: 90%;
@@ -2330,12 +2376,9 @@ html {
   stroke-width: 1.8;
 }
 .chip-btn .body {
-  fill: #262833;
+  fill: var(--chip-body);
   stroke: #16161d;
   stroke-width: 2.4;
-}
-:root[data-theme="dark"] .chip-btn .body {
-  fill: #454a60;
 }
 .chip-btn .die {
   fill: var(--yellow);
@@ -2477,7 +2520,7 @@ html {
   width: 100%;
   height: auto;
   fill: none;
-  stroke: var(--on-blue);
+  stroke: var(--cta-wire);
   stroke-width: 2.2;
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -2566,5 +2609,902 @@ html {
   .term-btn:hover,
   .kc-enter:hover {
     transform: none;
+  }
+}
+
+/* =====================================================================
+   13. SCROLLBAR: a slim rounded thumb on a transparent track.
+   Only for mouse / trackpad screens; phones and tablets keep their native
+   overlay scrollbars. Styling only: scrolling itself is untouched, and pages
+   that don't scroll (the welcome screen) still don't.
+   ===================================================================== */
+@media (hover: hover) and (pointer: fine) {
+  /* Chrome, Edge, Safari: a 10px gutter with a 2px clear border = a 6px thumb */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+    background: transparent;
+  }
+  ::-webkit-scrollbar-track,
+  ::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--sb);
+    background-clip: content-box;
+    border: 2px solid transparent;
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover,
+  ::-webkit-scrollbar-thumb:active {
+    background-color: var(--sb-hover);
+  }
+  ::-webkit-scrollbar-button {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+  /* Firefox (and browsers without the -webkit- scrollbar pseudo-elements) */
+  @supports not selector(::-webkit-scrollbar) {
+    html {
+      scrollbar-width: thin;
+      scrollbar-color: var(--sb) transparent;
+    }
+    html:hover {
+      scrollbar-color: var(--sb-hover) transparent;
+    }
+  }
+}
+
+/* =====================================================================
+   14. SCROLL POINTER (desktop): js/site.js builds it, then adds
+   .has-scroller to <html>, which hides the native scrollbar. Without
+   JavaScript, or on phones and tablets, the scrollbar above stays.
+   ===================================================================== */
+:root {
+  --sc-fill: rgba(255, 255, 255, 0.72);
+  --sc-stroke: rgba(22, 22, 29, 0.72);
+  --sc-shine: rgba(255, 255, 255, 0.95);
+}
+:root[data-theme="dark"] {
+  --sc-fill: rgba(58, 58, 58, 0.72);
+  --sc-stroke: rgba(234, 232, 230, 0.72);
+  --sc-shine: rgba(255, 255, 255, 0.3);
+}
+html.has-scroller {
+  scrollbar-width: none;
+}
+html.has-scroller::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+.scroller {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 9; /* under the top bar (10) and its popovers */
+  width: 28px; /* comfortable invisible hit area around a small pointer */
+  height: 40px;
+  display: grid;
+  place-items: center end;
+  padding-right: 6px;
+  cursor: grab;
+  touch-action: none;
+  transform: translateY(var(--sy, 84px));
+  transition: opacity 0.25s;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.scroller[hidden] {
+  display: none;
+}
+.scroller.dragging {
+  cursor: grabbing;
+}
+.scroller:focus {
+  outline: none;
+}
+.scroller svg {
+  width: 15px;
+  height: 20px;
+  overflow: visible;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.18));
+  transition: transform 0.2s var(--ease-out);
+}
+.sc-body {
+  fill: var(--sc-fill);
+  stroke: var(--sc-stroke);
+  stroke-width: 1.4;
+  stroke-linejoin: round;
+}
+.sc-shine {
+  fill: none;
+  stroke: var(--sc-shine);
+  stroke-width: 1.1;
+  stroke-linecap: round;
+}
+.scroller:hover svg,
+.scroller:focus-visible svg,
+.scroller.dragging svg {
+  transform: scale(1.14);
+}
+.scroller:focus-visible .sc-body {
+  stroke: var(--blue);
+  stroke-width: 2;
+}
+/* the percentage shows on hover, keyboard focus or while dragging */
+.scroller-label {
+  position: absolute;
+  right: 26px;
+  top: 50%;
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: var(--glass-solid);
+  box-shadow:
+    0 0 0 0.75px var(--glass-edge),
+    var(--shadow);
+  font: 700 11.5px/1 var(--ui);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(4px, -50%);
+  transition:
+    opacity 0.2s,
+    transform 0.2s;
+}
+.scroller:hover .scroller-label,
+.scroller:focus-visible .scroller-label,
+.scroller.dragging .scroller-label {
+  opacity: 1;
+  transform: translate(0, -50%);
+}
+/* stay out of the way while a popover (verse, volume) is open */
+html:has(.pop:not([hidden])) .scroller {
+  opacity: 0;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .scroller,
+  .scroller svg,
+  .scroller-label {
+    transition: none;
+  }
+}
+
+/* =====================================================================
+   15. SELECTED PROJECTS: 2 x 2 grid of large cards
+   ===================================================================== */
+.wk-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(16px, 2vw, 28px);
+}
+.wk {
+  display: grid;
+  gap: 12px;
+  align-content: start;
+}
+.wk-media {
+  position: relative;
+  aspect-ratio: 10 / 7;
+  border-radius: 22px;
+  overflow: hidden;
+  isolation: isolate;
+  container-type: inline-size; /* sequence text and pieces scale with the card */
+  background: var(--frame);
+  box-shadow:
+    0 0 0 1px var(--card-edge),
+    var(--shadow);
+  transition: transform 0.4s var(--ease-out);
+}
+.wk:hover .wk-media {
+  transform: translateY(-3px);
+}
+.wk-poster,
+.wk-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+}
+/* the title on a soft dark gradient, like the reference */
+.wk-shade {
+  position: absolute;
+  inset: 45% 0 0;
+  background: linear-gradient(transparent, rgba(12, 12, 16, 0.62));
+  pointer-events: none;
+  transition: opacity 0.35s;
+}
+.wk-title {
+  position: absolute;
+  left: clamp(14px, 3.2cqw, 24px);
+  bottom: clamp(12px, 3cqw, 22px);
+  z-index: 3;
+  margin: 0;
+  font: 700 clamp(18px, 4.4cqw, 30px) / 1.1 var(--ui);
+  letter-spacing: -0.02em;
+  color: #f7f6f4;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.35);
+  transition:
+    opacity 0.3s,
+    transform 0.3s;
+}
+.wk-title span {
+  font-weight: 500;
+  opacity: 0.86;
+}
+.wk.is-playing .wk-title,
+.wk.is-playing .wk-shade {
+  opacity: 0;
+}
+.wk-soon {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 3;
+  padding: 6px 11px;
+  border-radius: 999px;
+  background: rgba(16, 16, 20, 0.55);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  color: #f3f2f0;
+  font: 700 11.5px/1 var(--ui);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.wk-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.wk-link,
+.wk-play {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  box-shadow: inset 0 0 0 1px var(--line);
+  color: var(--ink);
+  font: 600 14px/1 var(--ui);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.wk-link:hover,
+.wk-play:hover {
+  background: var(--hover);
+}
+.wk-live {
+  margin-left: auto;
+  background: var(--blue);
+  color: var(--on-blue);
+  box-shadow: none;
+}
+.wk-live:hover {
+  background: var(--blue);
+  filter: brightness(1.06);
+}
+.wk-live svg {
+  width: 13px;
+  height: 13px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+.wk-play[aria-pressed="true"] {
+  background: var(--tint);
+  color: var(--blue);
+}
+.wk-play[hidden] {
+  display: none;
+}
+
+/* temporary covers for the two motion studies (not playable until a video is added) */
+.wk-cover {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.cover-m1 {
+  background: radial-gradient(120% 90% at 85% 10%, #2a2d52, #121218 60%);
+}
+.cover-m1 .c-num {
+  position: absolute;
+  left: 7%;
+  top: 4%;
+  font: 400 44cqw/1 var(--serif);
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(243, 242, 240, 0.55);
+  letter-spacing: -0.04em;
+}
+.cover-m1 i {
+  position: absolute;
+  right: 8%;
+  height: 7.5cqw;
+  border-radius: 999px;
+  transform: rotate(-8deg);
+}
+.cover-m1 i:nth-of-type(1) {
+  top: 16%;
+  width: 30cqw;
+  background: #ffd23f;
+}
+.cover-m1 i:nth-of-type(2) {
+  top: 30%;
+  width: 22cqw;
+  right: 16%;
+  background: #ff7ab8;
+}
+.cover-m1 i:nth-of-type(3) {
+  top: 44%;
+  width: 34cqw;
+  background: #6df0c2;
+}
+.cover-m1 i:nth-of-type(4) {
+  top: 58%;
+  width: 16cqw;
+  right: 20%;
+  background: #2f4bff;
+}
+.cover-m2 {
+  display: grid;
+  align-content: center;
+  background: linear-gradient(135deg, #6df0c2, #9aa2f0 55%, #2f4bff);
+}
+.cover-m2 .c-row {
+  display: block;
+  margin-left: -6%;
+  font: 800 17cqw/0.86 var(--ui);
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+  color: #16161d;
+  white-space: nowrap;
+  transform: rotate(-7deg);
+}
+.cover-m2 .c-row.o {
+  color: transparent;
+  -webkit-text-stroke: 1.5px #16161d;
+  margin-left: 4%;
+}
+
+/* =====================================================================
+   16. MOTION PREVIEWS: one 7.2s timeline per website card.
+   Scene "windows" (.sq-win) decide when each scene is visible; the pieces
+   inside (.sq-p) enter with their own motion at --d seconds, then drift
+   gently. Nothing animates until the card has .is-playing.
+   ===================================================================== */
+.wk-seq {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.25s,
+    visibility 0s 0.25s;
+}
+.wk.is-playing .wk-seq {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.25s;
+}
+.sq-win {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+.sq-bg {
+  position: absolute;
+  inset: 0;
+}
+.bg-porch {
+  background: radial-gradient(90% 80% at 20% 10%, #7a2bbd, #3b1a5a 70%);
+}
+.bg-porch-2 {
+  background: radial-gradient(100% 90% at 85% 20%, #8a3fd0, #2c1245 72%);
+}
+.bg-blue {
+  background: radial-gradient(90% 80% at 20% 10%, #2a63f0, #0b1b3f 72%);
+}
+.bg-blue-2 {
+  background: radial-gradient(110% 90% at 85% 15%, #3b76ff, #0d1f4a 70%);
+}
+.sq-p {
+  position: absolute;
+  opacity: 0;
+}
+.sq-img {
+  display: block;
+  width: 100%;
+  border-radius: 1.6cqw;
+  box-shadow: 0 1.8cqw 4.5cqw rgba(0, 0, 0, 0.38);
+}
+.sq-kicker,
+.sq-eyebrow {
+  display: block;
+  font: 700 1.9cqw/1.2 var(--ui);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.78);
+}
+.sq-eyebrow {
+  color: #ffd23f;
+}
+.sq-title {
+  display: block;
+  font: 400 10cqw/1 var(--serif);
+  letter-spacing: -0.02em;
+  color: #f7f6f4;
+}
+.sq-title.it {
+  font-style: italic;
+  color: #c9d5ff;
+}
+.sq-title.sm {
+  font-size: 5.4cqw;
+}
+.sq-cap {
+  display: block;
+  margin-top: 0.8cqw;
+  font: 400 4cqw/1.1 var(--serif);
+  color: #f7f6f4;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.4);
+}
+.sq-url {
+  display: block;
+  font: 600 2.1cqw/1 var(--ui);
+  color: rgba(255, 255, 255, 0.75);
+}
+.sq-frame {
+  display: flex;
+  gap: 0.7cqw;
+  align-items: center;
+  height: 3.2cqw;
+  padding: 0 1.4cqw;
+  border-radius: 1.6cqw 1.6cqw 0 0;
+  background: #f3f3f6;
+}
+.sq-frame i {
+  width: 0.9cqw;
+  height: 0.9cqw;
+  border-radius: 50%;
+  background: #ff5f57;
+}
+.sq-frame i:nth-child(2) {
+  background: #febc2e;
+}
+.sq-frame i:nth-child(3) {
+  background: #28c840;
+}
+.at-final .sq-img {
+  border-radius: 0 0 1.6cqw 1.6cqw;
+}
+
+/* ---- where the pieces sit (all in % of the card, so it scales) ---- */
+.w-intro .sq-p {
+  left: 8%;
+  overflow: hidden; /* the line mask */
+}
+.w-intro .sq-p:nth-child(2) {
+  top: 27%;
+}
+.w-intro .sq-p:nth-child(3) {
+  top: 35%;
+}
+.w-intro .sq-p:nth-child(4) {
+  top: 49%;
+  padding-bottom: 1cqw;
+}
+.at-cap {
+  left: 6%;
+  bottom: 8%;
+}
+.at-bar {
+  left: 5%;
+  top: 7%;
+  width: 58%;
+}
+.at-mood {
+  right: 5%;
+  top: 24%;
+  width: 50%;
+}
+.at-c1,
+.at-c2,
+.at-c3 {
+  top: 9%;
+  width: 29%;
+}
+.at-c1 {
+  left: 4%;
+}
+.at-c2 {
+  left: 35.5%;
+}
+.at-c3 {
+  left: 67%;
+}
+.at-stats {
+  left: 7%;
+  top: 54%;
+  width: 86%;
+}
+.at-bp-title {
+  left: 4%;
+  top: 7%;
+  width: 44%;
+}
+.at-bp-cv {
+  right: 4%;
+  top: 5%;
+  width: 45%;
+}
+.at-t1,
+.at-t2 {
+  top: 7%;
+  width: 45%;
+}
+.at-t1 {
+  left: 4%;
+}
+.at-t2 {
+  right: 4%;
+}
+.at-steps {
+  left: 8%;
+  top: 44%;
+  width: 84%;
+}
+.at-final {
+  left: 6%;
+  top: 13%;
+  width: 55%;
+}
+.at-end-t,
+.at-end-u {
+  left: 65%;
+  overflow: hidden;
+}
+.at-end-t {
+  top: 36%;
+}
+.at-end-u {
+  top: 50%;
+}
+
+/* ---- the timeline ---- */
+.wk.is-playing .sq-win {
+  animation: 7.2s linear infinite both;
+}
+.wk.is-playing .w-intro {
+  animation-name: win-intro;
+}
+.wk.is-playing .w-one {
+  animation-name: win-one;
+}
+.wk.is-playing .w-two {
+  animation-name: win-two;
+}
+.wk.is-playing .w-end {
+  animation-name: win-end;
+}
+@keyframes win-intro {
+  0%, 19% { opacity: 1; }
+  23%, 100% { opacity: 0; }
+}
+@keyframes win-one {
+  0%, 19% { opacity: 0; }
+  22%, 51% { opacity: 1; }
+  55%, 100% { opacity: 0; }
+}
+@keyframes win-two {
+  0%, 50% { opacity: 0; }
+  53%, 80% { opacity: 1; }
+  84%, 100% { opacity: 0; }
+}
+@keyframes win-end {
+  0%, 79% { opacity: 0; }
+  82%, 96% { opacity: 1; }
+  100% { opacity: 0; }
+}
+/* each piece: an entrance at its --d, then a slow drift (the layered movement) */
+.wk.is-playing .sq-p {
+  animation: 7.2s var(--ease-out) var(--d, 0s) infinite both;
+  opacity: 1;
+}
+.wk.is-playing .m-line > * {
+  animation: sq-line 7.2s var(--ease-out) var(--d, 0s) infinite both;
+}
+.wk.is-playing .m-line {
+  animation: none;
+}
+.wk.is-playing .m-rise {
+  animation-name: sq-rise;
+}
+.wk.is-playing .m-drop {
+  animation-name: sq-drop;
+}
+.wk.is-playing .m-left {
+  animation-name: sq-left;
+}
+.wk.is-playing .m-right {
+  animation-name: sq-right;
+}
+.wk.is-playing .m-wipe {
+  animation-name: sq-wipe;
+}
+.wk.is-playing .m-zoom {
+  animation-name: sq-zoom;
+}
+@keyframes sq-line {
+  0% { transform: translateY(115%); }
+  8%, 100% { transform: none; }
+}
+@keyframes sq-rise {
+  0% { opacity: 0; transform: translateY(14%); }
+  7% { opacity: 1; transform: none; }
+  100% { opacity: 1; transform: translateY(-2.5%); }
+}
+@keyframes sq-drop {
+  0% { opacity: 0; transform: translateY(-120%); }
+  7% { opacity: 1; transform: none; }
+  100% { opacity: 1; transform: translateY(4%); }
+}
+@keyframes sq-left {
+  0% { opacity: 0; transform: translateX(-10%); }
+  7% { opacity: 1; transform: none; }
+  100% { opacity: 1; transform: translateX(1.5%); }
+}
+@keyframes sq-right {
+  0% { opacity: 0; transform: translateX(14%) rotate(1.5deg); }
+  8% { opacity: 1; transform: none; }
+  100% { opacity: 1; transform: translateX(-2%); }
+}
+@keyframes sq-wipe {
+  0% { clip-path: inset(0 0 100% 0 round 1.6cqw); transform: scale(1.04); }
+  9% { clip-path: inset(0 0 0 0 round 1.6cqw); transform: none; }
+  100% { clip-path: inset(0 0 0 0 round 1.6cqw); transform: scale(0.985); }
+}
+@keyframes sq-zoom {
+  0% { opacity: 0; transform: scale(0.86) rotate(-2deg); }
+  9% { opacity: 1; transform: rotate(-1deg); }
+  100% { opacity: 1; transform: scale(1.03) rotate(-1deg); }
+}
+
+@media (max-width: 760px) {
+  .wk-grid {
+    grid-template-columns: 1fr;
+  }
+  .wk-media {
+    border-radius: 18px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wk-media,
+  .wk-seq {
+    transition: none;
+  }
+  .wk:hover .wk-media {
+    transform: none;
+  }
+}
+
+/* =====================================================================
+   17. CHARACTERS (js/characters.js): Kiki, Momo and Tri
+   ===================================================================== */
+:root {
+  --ch-blue: #2f4bff;
+  --ch-blue-top: #6f82ff;
+  --ch-pink: #ff7ab8;
+  --ch-yellow: #ffd23f;
+  --ch-mint: #6df0c2;
+}
+:root[data-theme="dark"] {
+  --ch-blue: #5561d6;
+  --ch-blue-top: #8b95f0;
+  --ch-pink: #e993bb;
+  --ch-yellow: #e6c35c;
+  --ch-mint: #86dcbc;
+}
+.char-slot {
+  position: absolute;
+  z-index: 3;
+  display: block;
+}
+.ch {
+  display: block;
+  width: 58px;
+  height: 58px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+button.ch {
+  cursor: pointer;
+  border-radius: 16px;
+}
+button.ch:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 3px;
+}
+.ch svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.ch .ch-fill,
+.ch .ch-face,
+.ch .ch-white,
+.ch .ch-wheel,
+.ch .ch-bubble {
+  stroke: #16161d;
+  stroke-width: 2.2;
+  stroke-linejoin: round;
+}
+.ch .ch-face {
+  stroke: none;
+}
+.ch .ch-white,
+.ch .ch-bubble {
+  fill: #fff;
+}
+.ch .ch-wheel {
+  fill: #fff;
+  stroke-width: 1.8;
+}
+.ch .ch-eyes ellipse,
+.ch .ch-pupils circle {
+  fill: #16161d;
+}
+.ch .ch-mouth,
+.ch .ch-line,
+.ch .ch-bang-line {
+  fill: none;
+  stroke: #16161d;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+}
+.ch .ch-bang-dot {
+  fill: #16161d;
+}
+.ch .ch-blush {
+  fill: #ff7ab8;
+  opacity: 0.55;
+}
+.ch-shy .ch-blush {
+  fill: #e0457f;
+  opacity: 0.35;
+  transition: opacity 0.3s;
+}
+.ch .ch-shadow {
+  fill: #16161d;
+  opacity: 0.14;
+}
+.ch-body {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+}
+/* idle: a slow breath, each character on its own rhythm */
+.ch-bounce .ch-body {
+  animation: ch-breathe 3.2s ease-in-out infinite;
+}
+.ch-alert .ch-body {
+  animation: ch-breathe 4.1s ease-in-out -1.3s infinite;
+}
+.ch.is-paused .ch-body,
+.ch.is-paused * {
+  animation-play-state: paused !important;
+}
+@keyframes ch-breathe {
+  50% {
+    transform: scale(1.03, 0.97);
+  }
+}
+/* Kiki: squash, leap, stretch, land */
+.ch-bounce.is-jump .ch-body {
+  animation: ch-jump 0.75s cubic-bezier(0.3, 0.7, 0.3, 1);
+}
+.ch-bounce.is-jump .ch-shadow {
+  animation: ch-shadow 0.75s ease;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+@keyframes ch-jump {
+  12% { transform: scale(1.18, 0.8); }
+  38% { transform: translateY(-38%) scale(0.9, 1.12); }
+  62% { transform: translateY(-6%) scale(1, 1); }
+  74% { transform: scale(1.12, 0.88); }
+  88% { transform: scale(0.97, 1.04); }
+}
+@keyframes ch-shadow {
+  38% { transform: scale(0.6); opacity: 0.06; }
+}
+/* Momo: ducks behind the edge when you come close, blushing */
+.slot-tile {
+  bottom: 100%;
+  right: 26px;
+  width: 58px;
+  height: 40px;
+  overflow: hidden; /* the tile's edge is what Momo hides behind */
+}
+.ch-shy {
+  transform: translateY(8px);
+  transition: transform 0.45s cubic-bezier(0.3, 1.4, 0.5, 1);
+}
+.ch-shy.is-hiding {
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(0.5, 0, 0.8, 0.4);
+}
+.ch-shy.is-hiding .ch-blush {
+  opacity: 0.8;
+}
+/* Tri: pupils follow the pointer; up close a "!" pops and it hops */
+.ch-alert .ch-pupils {
+  transform: translate(calc(var(--lx, 0) * 1px), calc(var(--ly, 0) * 1px));
+  transition: transform 0.12s linear;
+}
+.ch-alert .ch-bang {
+  opacity: 0;
+  transform: scale(0.3);
+  transform-box: fill-box;
+  transform-origin: 20% 100%;
+  transition:
+    opacity 0.2s,
+    transform 0.3s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+.ch-alert.is-alert .ch-bang {
+  opacity: 1;
+  transform: none;
+}
+.ch-alert.is-startled .ch-body {
+  animation: ch-hop 0.5s cubic-bezier(0.3, 0.7, 0.3, 1);
+}
+@keyframes ch-hop {
+  30% { transform: translateY(-16%) scale(0.94, 1.08); }
+  60% { transform: scale(1.06, 0.94); }
+}
+/* where they live on the home page */
+.cta {
+  position: relative;
+}
+.slot-cta {
+  top: -52px;
+  right: 24%;
+}
+.tile {
+  position: relative;
+}
+@media (max-width: 760px) {
+  .slot-cta {
+    right: 12%;
+  }
+  .ch {
+    width: 50px;
+    height: 50px;
+  }
+  .slot-tile {
+    width: 50px;
+    height: 34px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ch *,
+  .ch-shy,
+  .ch-alert .ch-pupils {
+    animation: none !important;
+    transition: none !important;
   }
 }

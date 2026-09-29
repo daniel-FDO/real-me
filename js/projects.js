@@ -116,3 +116,19 @@ window.PROJECTS = [
     ],
   },
 ];
+
+/* =====================================================================
+   HOME PAGE GRID ("Selected projects", 2 x 2)
+   Top row: two website projects (by slug from PROJECTS above); they play a short
+   motion preview built from their real screenshots on hover / focus.
+   Bottom row: your two motion graphics videos. They show a temporary cover and
+   a "Coming soon" label until you add them:
+     video:  "videos/motion-study-01.mp4"   (plays muted on hover, like the previews)
+     poster: "images/motion-study-01.jpg"   (a still frame shown before it plays)
+   ===================================================================== */
+window.FEATURED = [
+  { slug: "porchlight", label: "Web Design" },
+  { slug: "blueprint", label: "Web App" },
+  { motion: true, title: "Motion Study 01", label: "Motion Graphics", cover: "m1", video: "", poster: "" },
+  { motion: true, title: "Motion Study 02", label: "Motion Graphics", cover: "m2", video: "", poster: "" },
+];

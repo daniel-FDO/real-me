@@ -681,7 +681,20 @@ Site.define("welcome", function (root) {
     var n = parseInt(m[1], 16);
     return [n >> 16, (n >> 8) & 255, n & 255];
   }
+  // the palette as the current theme draws it (dark mode uses softer versions); bodies keep their
+  // original colour as a key, so switching theme recolours everything already on screen
+  var PAL = {};
+  function hue(c) {
+    return PAL[c] || c;
+  }
   function readColors() {
+    var cs0 = getComputedStyle(document.documentElement);
+    PAL = {
+      "#ffd23f": cs0.getPropertyValue("--yellow").trim() || "#ffd23f",
+      "#2f4bff": cs0.getPropertyValue("--tag-blue").trim() || "#2f4bff",
+      "#ff7ab8": cs0.getPropertyValue("--pink").trim() || "#ff7ab8",
+      "#6df0c2": cs0.getPropertyValue("--mint").trim() || "#6df0c2",
+    };
     var cs = getComputedStyle(document.documentElement);
     INK = rgb(cs.getPropertyValue("--ink"), INK);
     BLUE = rgb(cs.getPropertyValue("--blue"), BLUE);
@@ -1264,7 +1277,7 @@ Site.define("welcome", function (root) {
   function drawTech(b) {
     ctx.scale(b.ts, b.ts);
     ctx.translate(b.tox, b.toy);
-    TECH[b.tech].draw(b.col, b);
+    TECH[b.tech].draw(hue(b.col), b);
   }
 
   function spawnShape(x, y, still, type) {
@@ -1782,15 +1795,15 @@ Site.define("welcome", function (root) {
         ctx.fillText(b.ch, 0, b.fsz * 0.35);
       } else if (b.kind === "pill") {
         roundRect(-b.pw / 2, -b.ph / 2, b.pw, b.ph, b.ph / 2);
-        ctx.fillStyle = b.col;
+        ctx.fillStyle = hue(b.col);
         ctx.fill();
         ctx.font = "700 " + pf + 'px "DM Sans", system-ui, sans-serif';
-        ctx.fillStyle = b.col === "#2f4bff" ? "#fff" : "#16161d";
+        ctx.fillStyle = b.col === "#2f4bff" ? "#f3f2f0" : "#16161d";
         ctx.fillText(b.txt, 0, pf * 0.35);
       } else if (b.tech) {
         drawTech(b);
       } else {
-        ctx.fillStyle = b.col;
+        ctx.fillStyle = hue(b.col);
         ctx.beginPath();
         if (b.k === 0) ctx.arc(0, 0, b.circleRadius, 0, 6.283);
         else {
@@ -1884,9 +1897,13 @@ Site.define("welcome", function (root) {
     requestAnimationFrame(tick);
   });
 
+  // the little alert character (js/characters.js)
+  var charStop = window.Characters ? Characters.mount(root) : null;
+
   // leaving the welcome page: stop everything and let go of the sound bus
   return function unmount() {
     alive = false;
+    if (charStop) charStop();
     life.abort();
     spawnTimers.forEach(clearTimeout);
     clearTimeout(resizeTimer);

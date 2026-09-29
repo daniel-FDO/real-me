@@ -53,19 +53,21 @@
   inset: 0;
 }
 .wm .base {
-  background: var(--ink);
-  opacity: 0.08;
+  z-index: var(--wmw-base-z);
+  background: var(--wmw-fill);
+  opacity: var(--wmw-base);
   -webkit-mask: var(--wm) center/100% 100% no-repeat;
   mask: var(--wm) center/100% 100% no-repeat;
 }
 .wm .lit {
-  background: var(--blue);
-  opacity: 0.5;
+  z-index: 1;
+  background: var(--wmw-lit-bg);
+  opacity: var(--wmw-lit);
   -webkit-mask-image:
-    var(--wm),
+    var(--wmw-lit-mask),
     radial-gradient(circle var(--r, 240px) at var(--mx, 50%) var(--my, 35%), #000 0%, rgba(0, 0, 0, 0.6) 45%, transparent 100%);
   mask-image:
-    var(--wm),
+    var(--wmw-lit-mask),
     radial-gradient(circle var(--r, 240px) at var(--mx, 50%) var(--my, 35%), #000 0%, rgba(0, 0, 0, 0.6) 45%, transparent 100%);
   -webkit-mask-size:
     100% 100%,
@@ -278,39 +280,16 @@
   }
 }
 
-/* dark mode: a lighter touch, so the portrait glows softly instead of reading like a photo negative */
-:root[data-theme="dark"] .wm .base {
-  opacity: 0.045;
-}
-:root[data-theme="dark"] .wm .lit {
-  opacity: 0.3;
-}
 
 /* ---------- the control bar: clear frosted glass ----------
    Only the background is translucent; the labels and icons stay fully opaque and crisp.
    The physics objects and the portrait stay softly visible through it. */
 .top[data-bar="welcome"] .tools,
 .top[data-bar="welcome"] .brand {
-  background: rgba(255, 255, 255, 0.3);
-  -webkit-backdrop-filter: blur(16px) saturate(1.35);
-  backdrop-filter: blur(16px) saturate(1.35);
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.55),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9),
-    0 0 0 0.5px rgba(22, 22, 29, 0.08),
-    0 8px 28px rgba(22, 22, 29, 0.08),
-    0 1px 3px rgba(22, 22, 29, 0.05);
-}
-:root[data-theme="dark"] .top[data-bar="welcome"] .tools,
-:root[data-theme="dark"] .top[data-bar="welcome"] .brand {
-  background: rgba(30, 32, 40, 0.42);
-  -webkit-backdrop-filter: blur(18px) saturate(1.3);
-  backdrop-filter: blur(18px) saturate(1.3);
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.14),
-    0 10px 30px rgba(0, 0, 0, 0.35),
-    0 1px 3px rgba(0, 0, 0, 0.3);
+  background: var(--bar-bg);
+  -webkit-backdrop-filter: var(--bar-blur);
+  backdrop-filter: var(--bar-blur);
+  box-shadow: var(--bar-shadow);
 }
 .top[data-bar="welcome"] .tools button {
   transition:
@@ -319,17 +298,11 @@
     color 0.2s;
 }
 .top[data-bar="welcome"] .tools button:hover {
-  background: rgba(255, 255, 255, 0.55);
+  background: var(--bar-hover);
 }
 .top[data-bar="welcome"] .tools button:active {
-  background: rgba(22, 22, 29, 0.07);
+  background: var(--bar-press);
   transform: scale(0.95);
-}
-:root[data-theme="dark"] .top[data-bar="welcome"] .tools button:hover {
-  background: rgba(255, 255, 255, 0.09);
-}
-:root[data-theme="dark"] .top[data-bar="welcome"] .tools button:active {
-  background: rgba(255, 255, 255, 0.14);
 }
 /* the pressed / open states keep their blue tint on top of the glass */
 .top[data-bar="welcome"] .tools button[aria-pressed="true"],
@@ -340,21 +313,15 @@
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .top[data-bar="welcome"] .brand,
   .top[data-bar="welcome"] .tools {
-    background: rgba(255, 255, 255, 0.92);
-  }
-  :root[data-theme="dark"] .top[data-bar="welcome"] .brand,
-  :root[data-theme="dark"] .top[data-bar="welcome"] .tools {
-    background: rgba(32, 34, 44, 0.95);
+    background: var(--bar-solid);
   }
 }
 @media (prefers-reduced-transparency: reduce) {
+  .top[data-bar="welcome"] .brand,
   .top[data-bar="welcome"] .tools {
-    background: rgba(255, 255, 255, 0.94);
+    background: var(--bar-solid);
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
-  }
-  :root[data-theme="dark"] .top[data-bar="welcome"] .tools {
-    background: rgba(32, 34, 44, 0.96);
   }
 }
 
@@ -389,4 +356,19 @@
   color: var(--bg);
   font: 700 14px/1 var(--ui);
   cursor: pointer;
+}
+
+/* Tri, the alert little character, in the open space under the badge */
+.slot-welcome {
+  position: fixed;
+  top: 86px;
+  left: 22px;
+  z-index: 6;
+}
+@media (max-width: 760px) {
+  .slot-welcome {
+    top: 216px;
+    left: auto;
+    right: 16px;
+  }
 }

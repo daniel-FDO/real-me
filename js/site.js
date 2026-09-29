@@ -90,7 +90,7 @@
       b.setAttribute("title", dark ? "Light theme" : "Dark theme");
     });
     var m = document.querySelector('meta[name="theme-color"]');
-    if (m) m.content = dark ? "#0d0e13" : "#fbfbfd";
+    if (m) m.content = dark ? "#121212" : "#fbfbfd";
   }
   sysDark.addEventListener("change", function (e) {
     if (!store.get("theme")) setTheme(e.matches ? "dark" : "light", false);
@@ -661,8 +661,106 @@
     },
   };
 
+  /* =====================================================================
+     SCROLL POINTER: a small mouse-pointer on the right edge that stands in for the
+     desktop scrollbar. It only *reflects* and *sets* the real scroll position
+     (window.scrollTo), so wheel, trackpad, keys and touch keep working natively.
+     Mouse / trackpad screens only; the native scrollbar is hidden only once this
+     has been built, so if anything fails the normal scrollbar stays.
+     ===================================================================== */
+  var TOP_GAP = 84, // keeps it below the top bar
+    BOTTOM_GAP = 24,
+    THUMB = 40; // the (invisible) interaction box; the pointer drawn inside it is smaller
+  function initScroller() {
+    if (!matchMedia("(hover: hover) and (pointer: fine)").matches) return; // phones and tablets: native
+    var el;
+    try {
+      el = document.createElement("div");
+      el.className = "scroller";
+      el.tabIndex = 0;
+      el.setAttribute("role", "scrollbar");
+      el.setAttribute("aria-orientation", "vertical");
+      el.setAttribute("aria-controls", "app");
+      el.setAttribute("aria-label", "Page scroll position");
+      el.setAttribute("aria-valuemin", "0");
+      el.setAttribute("aria-valuemax", "100");
+      el.innerHTML =
+        '<svg viewBox="0 0 18 24" aria-hidden="true"><path class="sc-body" d="M2.5 2.2v17.6l4.5-4.3 3.2 7.2 3.3-1.4-3.1-7.1h6.3z"/><path class="sc-shine" d="M4.2 5.6v9.2"/></svg>' +
+        '<span class="scroller-label" aria-hidden="true">0%</span>';
+      document.body.appendChild(el);
+    } catch (e) {
+      return;
+    }
+    var label = el.querySelector(".scroller-label"),
+      queued = false,
+      drag = null;
+    function maxScroll() {
+      return Math.max(0, document.documentElement.scrollHeight - innerHeight);
+    }
+    function range() {
+      return Math.max(1, innerHeight - TOP_GAP - BOTTOM_GAP - THUMB);
+    }
+    // place the pointer to match the page's scroll position
+    function update() {
+      queued = false;
+      var max = maxScroll();
+      el.hidden = max < 8; // nothing to scroll (e.g. the welcome screen): no indicator
+      if (el.hidden) return;
+      var p = Math.min(1, Math.max(0, scrollY / max)),
+        pct = Math.round(p * 100);
+      el.style.setProperty("--sy", TOP_GAP + p * range() + "px");
+      el.setAttribute("aria-valuenow", pct);
+      el.setAttribute("aria-valuetext", pct + "% down the page");
+      label.textContent = pct + "%";
+    }
+    function queue() {
+      if (!queued) {
+        queued = true;
+        requestAnimationFrame(update);
+      }
+    }
+    addEventListener("scroll", queue, { passive: true });
+    addEventListener("resize", queue);
+    if (window.ResizeObserver) new ResizeObserver(queue).observe(document.body); // page swaps, images loading
+    // DRAG: move the pointer, and the page follows (instantly, not smoothed)
+    el.addEventListener("pointerdown", function (e) {
+      if (e.button !== 0) return;
+      e.preventDefault();
+      el.setPointerCapture(e.pointerId);
+      var r = el.getBoundingClientRect();
+      drag = { off: e.clientY - r.top };
+      el.classList.add("dragging");
+      el.focus({ preventScroll: true });
+    });
+    el.addEventListener("pointermove", function (e) {
+      if (!drag) return;
+      var p = (e.clientY - drag.off - TOP_GAP) / range();
+      scrollTo({ top: Math.min(1, Math.max(0, p)) * maxScroll(), behavior: "instant" });
+    });
+    function stop() {
+      drag = null;
+      el.classList.remove("dragging");
+    }
+    el.addEventListener("pointerup", stop);
+    el.addEventListener("pointercancel", stop);
+    el.addEventListener("lostpointercapture", stop);
+    // KEYBOARD: the usual scrollbar keys
+    el.addEventListener("keydown", function (e) {
+      var step = { ArrowDown: 60, ArrowUp: -60, PageDown: innerHeight * 0.9, PageUp: -innerHeight * 0.9 }[e.key];
+      if (step) scrollBy({ top: step });
+      else if (e.key === "Home") scrollTo({ top: 0 });
+      else if (e.key === "End") scrollTo({ top: maxScroll() });
+      else return;
+      e.preventDefault();
+    });
+    update();
+    root.classList.add("has-scroller"); // only now is the native scrollbar hidden (see css)
+    queue();
+  }
+
   function boot() {
     chrome();
+    initScroller();
     markActive();
     renderSound();
     renderTheme();

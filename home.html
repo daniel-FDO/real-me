@@ -63,10 +63,11 @@
       </div>
     </header>
 
-    <main id="app" class="page" data-page="home" data-scripts="js/projects.js js/pages.js">
+    <main id="app" class="page" data-page="home" data-scripts="js/projects.js js/characters.js js/pages.js">
       <!-- HERO: introduction on the left, the swipeable project previews on the right -->
       <section class="hero2" aria-labelledby="hero-title">
         <!-- your portrait as a faint watermark (the silhouette lives in css/portrait.css) -->
+        <div class="hero-glow" aria-hidden="true"></div>
         <div class="hero-wm" aria-hidden="true"></div>
         <!-- LIVING WORKSPACE: tiny decorative objects; js/pages.js decides when each one plays -->
         <div class="workspace" aria-hidden="true" data-workspace>
@@ -186,7 +187,7 @@
           </button>
           <a class="btn ghost" href="work.html">View all projects <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg></a>
         </div>
-        <div class="grid" data-featured></div>
+        <div class="wk-grid" data-featured></div>
       </section>
 
       <!-- WHAT I DO: three short service tiles -->
@@ -202,13 +203,14 @@
         <div class="cols">
           <div class="tile glass"><div class="dot" style="--c: var(--yellow)"></div><h3 class="h3">Design</h3><p>Placeholder: interfaces, identities and prototypes that are clear first and fun second.</p></div>
           <div class="tile glass"><div class="dot" style="--c: var(--blue)"></div><h3 class="h3">Development</h3><p>Placeholder: fast, accessible front ends in plain HTML, CSS and JavaScript, or your framework of choice.</p></div>
-          <div class="tile glass"><div class="dot" style="--c: var(--pink)"></div><h3 class="h3">Motion and sound</h3><p>Placeholder: physics, micro-interactions and UI sound that make a site feel alive.</p></div>
+          <div class="tile glass"><span class="char-slot slot-tile" data-char="shy"></span><div class="dot" style="--c: var(--pink)"></div><h3 class="h3">Motion and sound</h3><p>Placeholder: physics, micro-interactions and UI sound that make a site feel alive.</p></div>
         </div>
       </section>
 
       <!-- CALL TO ACTION -->
       <section class="section" aria-labelledby="cta-title">
         <div class="cta">
+          <span class="char-slot slot-cta" data-char="bounce"></span>
           <div class="cta-text">
             <h2 class="h2" id="cta-title">Got an idea?</h2>
             <p>Placeholder: I’m taking on a small number of projects. Tell me about yours and I’ll reply within a couple of days.</p>
