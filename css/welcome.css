@@ -1,0 +1,392 @@
+/* =====================================================================
+   WELCOME PAGE ONLY (index.html). Shared bits live in site.css.
+   ===================================================================== */
+:root[data-page="welcome"],
+:root[data-page="welcome"] body {
+  height: 100%;
+  overflow: hidden;
+}
+.welcome canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.welcome canvas:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: -6px;
+}
+.skip-intro {
+  position: fixed;
+  left: 50%;
+  top: 12px;
+  z-index: 30;
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: var(--blue);
+  color: var(--on-blue);
+  font-weight: 700;
+  text-decoration: none;
+  transform: translate(-50%, -160%);
+}
+.skip-intro:focus {
+  transform: translate(-50%, 0);
+}
+
+/* ---------- watermark portrait ---------- */
+.wm {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  z-index: 0;
+  width: min(100vh, 130vw);
+  aspect-ratio: 620/593;
+  pointer-events: none;
+  transform: translate3d(calc(-50% + var(--px, 0px)), var(--py, 0px), 0);
+}
+.wm i {
+  position: absolute;
+  inset: 0;
+}
+.wm .base {
+  background: var(--ink);
+  opacity: 0.08;
+  -webkit-mask: var(--wm) center/100% 100% no-repeat;
+  mask: var(--wm) center/100% 100% no-repeat;
+}
+.wm .lit {
+  background: var(--blue);
+  opacity: 0.5;
+  -webkit-mask-image:
+    var(--wm),
+    radial-gradient(circle var(--r, 240px) at var(--mx, 50%) var(--my, 35%), #000 0%, rgba(0, 0, 0, 0.6) 45%, transparent 100%);
+  mask-image:
+    var(--wm),
+    radial-gradient(circle var(--r, 240px) at var(--mx, 50%) var(--my, 35%), #000 0%, rgba(0, 0, 0, 0.6) 45%, transparent 100%);
+  -webkit-mask-size:
+    100% 100%,
+    100% 100%;
+  mask-size:
+    100% 100%,
+    100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+}
+
+/* ---------- bottom guide ---------- */
+/* one instruction only: how to move on. The ring turns while it waits and fills while you hold. */
+.guide {
+  position: fixed;
+  bottom: 14px;
+  left: 12px;
+  right: 12px;
+  margin: 0 auto;
+  width: max-content;
+  z-index: 5;
+  max-width: calc(100% - 24px);
+  border-radius: 999px;
+  padding: 8px 26px 8px 8px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  pointer-events: none;
+  animation: nudge 2.4s ease-out 1.5s 3;
+  /* clear glass: the pile resting on the floor stays visible through it */
+  background: linear-gradient(160deg, color-mix(in srgb, var(--bg) 55%, transparent), color-mix(in srgb, var(--bg) 25%, transparent) 60%, color-mix(in srgb, var(--bg) 40%, transparent));
+  -webkit-backdrop-filter: blur(3px) saturate(1.6);
+  backdrop-filter: blur(3px) saturate(1.6);
+}
+.guide b,
+.guide span {
+  text-shadow:
+    0 0 10px var(--bg),
+    0 0 3px var(--bg),
+    0 0 1px var(--bg);
+}
+.guide .ic {
+  flex: none;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--blue);
+  color: var(--on-blue);
+}
+.guide svg {
+  width: 30px;
+  height: 30px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  animation: spin 1.8s linear infinite;
+}
+.guide .track {
+  opacity: 0.35;
+}
+.guide .arc {
+  stroke-dasharray: 62.8;
+  stroke-dashoffset: calc(62.8 * (1 - var(--hold, 0.28)));
+  transform: rotate(-90deg);
+  transform-origin: 12px 12px;
+}
+.guide.up {
+  bottom: auto;
+}
+.guide.holding svg {
+  animation: none;
+}
+.guide b {
+  display: block;
+  white-space: nowrap;
+  font: 700 18px/1.15 var(--ui);
+}
+.guide span {
+  display: block;
+  white-space: nowrap;
+  font: 500 13.5px/1.25 var(--ui);
+  color: var(--muted);
+  margin-top: 3px;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes nudge {
+  0% {
+    box-shadow:
+      0 0 0 0 rgba(47, 75, 255, 0.35),
+      var(--shadow);
+  }
+  70%,
+  100% {
+    box-shadow:
+      0 0 0 16px rgba(47, 75, 255, 0),
+      var(--shadow);
+  }
+}
+
+/* ---------- the blue reveal when you enter ---------- */
+.site {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  background: var(--blue);
+  visibility: hidden;
+  clip-path: circle(0 at var(--ox, 50%) var(--oy, 50%));
+  transition:
+    clip-path 0.9s var(--ease),
+    visibility 0s 0.9s;
+}
+.site.on {
+  visibility: visible;
+  clip-path: circle(150vmax at var(--ox, 50%) var(--oy, 50%));
+  transition:
+    clip-path 0.9s var(--ease),
+    visibility 0s;
+}
+
+@media (max-width: 760px) {
+  .top[data-bar="welcome"] {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  .top[data-bar="welcome"] .brand {
+    align-self: flex-start;
+  }
+  .top[data-bar="welcome"] .tools {
+    justify-content: space-between;
+  }
+  .top[data-bar="welcome"] .tools > button,
+  .top[data-bar="welcome"] .snd {
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    padding: 9px 4px;
+    font-size: 13.5px;
+    text-align: center;
+  }
+  .top[data-bar="welcome"] .snd-group {
+    flex: 1.35;
+  }
+  .top[data-bar="welcome"] .tools .icon {
+    flex: none;
+    padding: 9px 8px;
+  }
+  .top[data-bar="welcome"] .tools .val {
+    font-size: 12px;
+  }
+  .top[data-bar="welcome"] .vol-pop {
+    left: 0;
+    right: auto;
+  }
+  .guide {
+    padding: 7px 20px 7px 7px;
+    gap: 12px;
+  }
+  .guide .ic {
+    width: 42px;
+    height: 42px;
+  }
+  .guide svg {
+    width: 26px;
+    height: 26px;
+  }
+  .guide b {
+    font-size: 16px;
+  }
+  .guide span {
+    font-size: 12.5px;
+  }
+  /* on phones the credit sits in the free space beside the name */
+  :root[data-page="welcome"] .credit {
+    top: 12px;
+    bottom: auto;
+    max-width: calc(100% - 212px);
+    padding: 6px 11px 7px;
+    border-radius: 14px;
+    font-size: 10.5px;
+  }
+  :root[data-page="welcome"] .credit b {
+    font-size: 11.5px;
+  }
+}
+@media (max-width: 360px) {
+  :root[data-page="welcome"] .credit {
+    padding: 5px 10px 6px;
+    line-height: 1.2;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .site,
+  .site.on {
+    transition: none;
+  }
+  .guide,
+  .guide svg {
+    animation: none;
+  }
+}
+
+/* dark mode: a lighter touch, so the portrait glows softly instead of reading like a photo negative */
+:root[data-theme="dark"] .wm .base {
+  opacity: 0.045;
+}
+:root[data-theme="dark"] .wm .lit {
+  opacity: 0.3;
+}
+
+/* ---------- the control bar: clear frosted glass ----------
+   Only the background is translucent; the labels and icons stay fully opaque and crisp.
+   The physics objects and the portrait stay softly visible through it. */
+.top[data-bar="welcome"] .tools,
+.top[data-bar="welcome"] .brand {
+  background: rgba(255, 255, 255, 0.3);
+  -webkit-backdrop-filter: blur(16px) saturate(1.35);
+  backdrop-filter: blur(16px) saturate(1.35);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 0 0 0.5px rgba(22, 22, 29, 0.08),
+    0 8px 28px rgba(22, 22, 29, 0.08),
+    0 1px 3px rgba(22, 22, 29, 0.05);
+}
+:root[data-theme="dark"] .top[data-bar="welcome"] .tools,
+:root[data-theme="dark"] .top[data-bar="welcome"] .brand {
+  background: rgba(30, 32, 40, 0.42);
+  -webkit-backdrop-filter: blur(18px) saturate(1.3);
+  backdrop-filter: blur(18px) saturate(1.3);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    0 10px 30px rgba(0, 0, 0, 0.35),
+    0 1px 3px rgba(0, 0, 0, 0.3);
+}
+.top[data-bar="welcome"] .tools button {
+  transition:
+    background 0.18s,
+    transform 0.12s,
+    color 0.2s;
+}
+.top[data-bar="welcome"] .tools button:hover {
+  background: rgba(255, 255, 255, 0.55);
+}
+.top[data-bar="welcome"] .tools button:active {
+  background: rgba(22, 22, 29, 0.07);
+  transform: scale(0.95);
+}
+:root[data-theme="dark"] .top[data-bar="welcome"] .tools button:hover {
+  background: rgba(255, 255, 255, 0.09);
+}
+:root[data-theme="dark"] .top[data-bar="welcome"] .tools button:active {
+  background: rgba(255, 255, 255, 0.14);
+}
+/* the pressed / open states keep their blue tint on top of the glass */
+.top[data-bar="welcome"] .tools button[aria-pressed="true"],
+.top[data-bar="welcome"] .tools button[aria-expanded="true"] {
+  background: var(--tint);
+}
+/* no backdrop blur (or reduced transparency): a solid, readable bar instead */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .top[data-bar="welcome"] .brand,
+  .top[data-bar="welcome"] .tools {
+    background: rgba(255, 255, 255, 0.92);
+  }
+  :root[data-theme="dark"] .top[data-bar="welcome"] .brand,
+  :root[data-theme="dark"] .top[data-bar="welcome"] .tools {
+    background: rgba(32, 34, 44, 0.95);
+  }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .top[data-bar="welcome"] .tools {
+    background: rgba(255, 255, 255, 0.94);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  :root[data-theme="dark"] .top[data-bar="welcome"] .tools {
+    background: rgba(32, 34, 44, 0.96);
+  }
+}
+
+/* keyboard buttons for the tech objects: invisible until focused */
+.tech-ctrl {
+  position: fixed;
+  left: 12px;
+  bottom: 96px;
+  z-index: 6;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.tech-ctrl button {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  border: 0;
+  white-space: nowrap;
+}
+.tech-ctrl button:focus {
+  position: static;
+  width: auto;
+  height: auto;
+  clip: auto;
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--bg);
+  font: 700 14px/1 var(--ui);
+  cursor: pointer;
+}

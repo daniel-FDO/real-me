@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en" data-page="contact">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Contact | Daniel Fasan</title>
+    <meta name="description" content="Get in touch with Daniel Fasan about a project, a role or a collaboration." />
+    <meta name="theme-color" content="#fbfbfd" />
+    <link rel="icon" href="data:," />
+    <script>
+      // pick the theme before the first paint so there is no flash
+      try {
+        document.documentElement.dataset.theme = localStorage.getItem("df:theme") || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      } catch (e) {}
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/site.css" />
+    <script src="js/site.js" defer></script>
+  </head>
+  <body>
+    <a class="skip" href="#app">Skip to content</a>
+    <header class="top" data-bar="site">
+      <div class="brand glass" role="img" aria-label="Daniel Fasan"><span class="mono" aria-hidden="true">dF.</span></div>
+      <nav class="nav glass" aria-label="Main">
+        <a href="home.html">Hub</a>
+        <a href="about.html">Me</a>
+        <a href="work.html">Lab</a>
+        <a href="contact.html" aria-current="page">Say hello</a>
+      </nav>
+      <div class="bar-right">
+        <div class="pop-wrap">
+          <button class="pill glass" data-popover aria-controls="verse-pop" aria-expanded="false" title="Daily verse">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H19v15H6.5A1.5 1.5 0 0 0 5 19.5z" /><path d="M5 19.5A1.5 1.5 0 0 0 6.5 21H19v-3" /><path d="M12 6.5v6M9.5 8.8h5" /></svg><span class="lbl">Daily verse</span>
+          </button>
+          <div class="pop verse-pop" id="verse-pop" role="dialog" aria-labelledby="verse-title" tabindex="-1" data-autofocus hidden>
+            <p class="pop-kicker" id="verse-title">A verse for today</p>
+            <blockquote>
+              <p data-verse-text></p>
+              <footer><cite data-verse-ref></cite> · <abbr title="World English Bible (public domain)">WEB</abbr></footer>
+            </blockquote>
+            <button class="btn small" type="button" data-verse-next>Another verse</button>
+          </div>
+        </div>
+        <div class="tools glass">
+          <div class="snd-group">
+            <button class="snd" data-sound aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z" /><path d="M16.5 8.5a5 5 0 0 1 0 7" /></svg><span class="word">Sound</span> <span class="val">Off</span></button>
+            <button class="icon" data-popover aria-controls="vol-pop" aria-expanded="false" aria-label="Music volume" title="Music volume"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h10M18 8h2M4 16h2M10 16h10" /><circle cx="16" cy="8" r="2" /><circle cx="8" cy="16" r="2" /></svg></button>
+            <div class="pop vol-pop" id="vol-pop" hidden>
+              <div class="vol-row">
+                <label for="vol">Music</label>
+                <input id="vol" type="range" min="0" max="100" step="1" value="50" />
+                <output id="vol-out" for="vol">50%</output>
+              </div>
+              <p>Just Need Ya by Reece Rosé &amp; STREETSINEZ (NCS)</p>
+            </div>
+          </div>
+          <span class="sep" aria-hidden="true"></span>
+          <button class="icon" data-theme-toggle aria-label="Switch theme"><svg class="theme-light" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z" /></svg><svg class="theme-dark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" /></svg></button>
+        </div>
+      </div>
+    </header>
+
+    <main id="app" class="page" data-page="contact" data-scripts="js/projects.js js/pages.js">
+      <section class="split" style="align-items: start" aria-labelledby="contact-title">
+        <div>
+          <h1 class="display" id="contact-title">Say <em>hello</em>.</h1>
+          <p class="lede">Tell me a little about your project, role or idea. I usually reply within two working days.</p>
+          <h2 class="h3" style="margin: 34px 0 12px">Or find me here</h2>
+          <!-- replace the # links with your own profiles -->
+          <ul class="links">
+            <li><a class="glass" href="mailto:hello@example.com" data-email>Email <span>hello@example.com</span></a></li>
+            <li><a class="glass" href="#" data-router="off">GitHub <span>@yourname</span></a></li>
+            <li><a class="glass" href="#" data-router="off">LinkedIn <span>/in/yourname</span></a></li>
+            <li><a class="glass" href="#" data-router="off">Instagram <span>@yourname</span></a></li>
+          </ul>
+        </div>
+        <form class="form glass" novalidate aria-labelledby="form-title">
+          <h2 class="h3" id="form-title">Send a message</h2>
+          <div class="field">
+            <label for="f-name">Your name</label>
+            <input id="f-name" name="name" autocomplete="name" required aria-describedby="f-name-err" />
+            <p class="err" id="f-name-err"></p>
+          </div>
+          <div class="field">
+            <label for="f-email">Email</label>
+            <input id="f-email" name="email" type="email" autocomplete="email" required aria-describedby="f-email-err" />
+            <p class="err" id="f-email-err"></p>
+          </div>
+          <div class="field">
+            <label for="f-topic">What’s it about?</label>
+            <select id="f-topic" name="topic">
+              <option>A new project</option>
+              <option>A job or role</option>
+              <option>A collaboration</option>
+              <option>Just saying hi</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="f-message">Message</label>
+            <textarea id="f-message" name="message" required aria-describedby="f-message-err"></textarea>
+            <p class="err" id="f-message-err"></p>
+          </div>
+          <div class="hp" aria-hidden="true">
+            <label for="f-website">Leave this empty</label>
+            <input id="f-website" name="website" tabindex="-1" autocomplete="off" />
+          </div>
+          <div>
+            <button class="btn" type="submit">Send message</button>
+          </div>
+          <p class="status" data-status role="status"></p>
+        </form>
+      </section>
+      <footer class="foot">
+        <p>© <span data-year>2026</span> Daniel Fasan · <a href="index.html">Replay the welcome</a></p>
+        <p>Music: Just Need Ya by Reece Rosé &amp; STREETSINEZ (NCS)</p>
+      </footer>
+    </main>
+  </body>
+</html>
